@@ -1,3 +1,4 @@
+import { title } from "process";
 import Book from "../models/booksModel.js";
 
 export const create = async (req, res) => {
@@ -18,20 +19,21 @@ export const create = async (req, res) => {
 };
 
 export const fetch = async (req, res) => {
+
     try {
-        const { generation } = req.body; 
-        if(generation){
-            const books = await Book.find({ generation: generation }).sort({ id: 1 });
-            res.status(200).json({ data: books });
-        } else {
-            const books = await Book.find().sort({ id: 1 });
-            res.status(200).json({ data: books });
-        }
+        const query = req.body && Object.keys(req.body).length > 0 ? req.body : {};
+        console.log('=====> query: ', query)
+        const books = await Book.find(query).sort({ id: 1 });
+        res.status(200).json({
+            status: 1,
+            data: books,
+        });
     } catch (err) {
-        console.log('ERR: ', err);
-        res.status(500).json("INTERNAL SERVER ERROR...!");
+        console.error('ERR: ', err);
+        res.status(500).json({ status: 0, message: "INTERNAL SERVER ERROR...!" });
     }
 };
+
 
 export const update = async (req, res) => {
     try {
@@ -49,7 +51,7 @@ export const update = async (req, res) => {
         // Respond with the updated book
         res.status(200).json(updatebook);
     } catch (error) {
-        console.error('=========================> ERR: ', error);
+        console.error('=============> ERR: ', error);
         res.status(500).json({ message: "INTERNAL SERVER ERROR...!" });
     }
 };

@@ -12,10 +12,12 @@ dotenv.config();
 
 const PORT = process.env.PORT || 2000;
 const MONGOURL = process.env.MONGO_URL;
+console.log('MONGO_URL: ', MONGOURL);
+
 
 const corsOptions = {
     origin: 'http://localhost:4200',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'POSTJSON', 'GETJSON'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   };
 
