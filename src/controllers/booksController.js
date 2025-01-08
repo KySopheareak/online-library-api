@@ -49,7 +49,7 @@ export const update = async (req, res) => {
         // Respond with the updated book
         res.status(200).json(updatebook);
     } catch (error) {
-        console.error('=========================> ERR: ', error);
+        console.error('=============> ERR: ', error);
         res.status(500).json({ message: "INTERNAL SERVER ERROR...!" });
     }
 };
