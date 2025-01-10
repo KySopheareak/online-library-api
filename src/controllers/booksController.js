@@ -1,4 +1,3 @@
-import { title } from "process";
 import Book from "../models/booksModel.js";
 
 export const create = async (req, res) => {
@@ -22,7 +21,6 @@ export const fetch = async (req, res) => {
 
     try {
         const query = req.body && Object.keys(req.body).length > 0 ? req.body : {};
-        console.log('=====> query: ', query)
         const books = await Book.find(query).sort({ id: 1 });
         res.status(200).json({
             status: 1,
