@@ -2,20 +2,41 @@ import Book from "../models/booksModel.js";
 
 export const create = async (req, res) => {
     try {
-        const bookData = new Book(req.body);
-        const { title } = req.body;
-        const bookExist = await Book.findOne({ title: title });
-        if(bookExist){
-            return res.status(400).json({ message: 'BOOK ALREADY EXIST!' });
-        }
-        const savedbook = await bookData.save();
-        res.status(200).json(savedbook);
+        const { title, description, full_story, rating } = req.body;
 
+        const bookExist = await Book.findOne({ title });
+        if (bookExist) {
+            return res.status(400).json({ message: 'BOOK ALREADY EXISTS!' });
+        }
+
+        const bookData = new Book({
+            title,
+            description,
+            // full_story,
+            rating
+        });
+
+        // Handle file upload
+        if (req.file) {
+            bookData.file = {
+                filename: req.file.filename,
+                originalname: req.file.originalname,
+                path: req.file.path,
+                mimetype: req.file.mimetype,
+                size: req.file.size
+            };
+        }
+
+        console.log('Uploaded File:', req.file);
+
+        const savedBook = await bookData.save();
+        res.status(201).json(savedBook);
     } catch (error) {
-        console.log('ERRR: ', error)
-        res.status(500).json({ error: "INTERNAL SERVER ERROR!" })
+        console.error('Create Book Error:', error);
+        res.status(500).json({ error: "INTERNAL SERVER ERROR!" });
     }
 };
+
 
 export const fetch = async (req, res) => {
 
@@ -24,7 +45,7 @@ export const fetch = async (req, res) => {
         const books = await Book.find(query).sort({ id: 1 });
         res.status(200).json({
             status: 1,
-            data: books,
+            data: {list: books},
         });
     } catch (err) {
         console.error('ERR: ', err);

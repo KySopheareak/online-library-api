@@ -9,6 +9,9 @@ import cors from 'cors';
 const app = express();
 app.use(bodyParser.json());
 dotenv.config();
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 2000;
 const MONGOURL = process.env.MONGO_URL;
@@ -19,7 +22,7 @@ const corsOptions = {
     origin: 'http://localhost:4200',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-  };
+};
 
 
 export let connection;
@@ -58,8 +61,8 @@ process.on("SIGINT", () => {
 });
 
 app.listen(PORT, () => {
-            console.log(`SERVER IN RUNNING ON PORT ${PORT}`);
-        });
+    console.log(`SERVER IN RUNNING ON PORT ${PORT}`);
+});
 
 connect();
 
